@@ -1,0 +1,36 @@
+DROP DATABASE db_funeraria;
+CREATE DATABASE db_funeraria;
+USE db_funeraria;
+
+CREATE TABLE tb_usuario(
+    usuario_id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_email VARCHAR(50) NOT NULL,
+    usuario_senha VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE tb_finado(
+    finado_id INT AUTO_INCREMENT PRIMARY KEY,
+    finado_nome VARCHAR(100) NOT NULL,
+    finado_certidão INT NOT NULL
+);
+
+CREATE TABLE tb_urna(
+    urna_id INT AUTO_INCREMENT PRIMARY KEY,
+    urna_nome VARCHAR(50) NOT NULL,
+    urna_tipo BOOLEAN NOT NULL,
+    urna_material VARCHAR(50) NOT NULL,
+    urna_preco FLOAT NOT NULL
+);
+
+CREATE TABLE tb_velorio (
+    velorio_data DATE,
+    velorio_id INT AUTO_INCREMENT PRIMARY KEY,
+    finado_id INT,
+    usuario_id INT,
+    urna_id INT,
+    FOREIGN KEY (finado_id) REFERENCES tb_finado(finado_id),
+    FOREIGN KEY (urna_id) REFERENCES tb_urna(urna_id),
+    FOREIGN KEY (usuario_id) REFERENCES tb_usuario(usuario_id)
+);
+
+INSERT INTO tb_usuario(usuario_email,usuario_senha) VALUES ('admin','admin');
