@@ -17,7 +17,7 @@ CREATE TABLE tb_finado(
 CREATE TABLE tb_urna(
     urna_id INT AUTO_INCREMENT PRIMARY KEY,
     urna_nome VARCHAR(50) NOT NULL,
-    urna_tipo BOOLEAN NOT NULL,
+    urna_tipo VARCHAR(50) NOT NULL,
     urna_material VARCHAR(50) NOT NULL,
     urna_preco FLOAT NOT NULL
 );

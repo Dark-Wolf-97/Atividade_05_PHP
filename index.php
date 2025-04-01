@@ -25,6 +25,7 @@
         <?php if($_SESSION['logado']): ?>
             <div class="d-flex justify-content-center gap-3">
                 <a href="finado/view/Finado.php" class="btn btn-custom">Finados</a>
+                <a href="urna/view/urna.php" class="btn btn-custom">Urnas</a>
             </div>
         <?php else: ?>
             <a href="login.php" class="btn btn-custom">Entrar</a>

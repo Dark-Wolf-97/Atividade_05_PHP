@@ -9,7 +9,10 @@ class FinadoService {
         $stmt->execute();
         $resposta = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $resposta[] = new Finado($row['finado_nome'], $row['finado_certidão'], $row['finado_id']);
+            $resposta[] = new Finado(
+            $row['finado_nome'], 
+            $row['finado_certidão'], 
+            $row['finado_id']);
         }
         return $resposta;
     }
