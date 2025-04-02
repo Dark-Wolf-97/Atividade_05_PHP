@@ -21,19 +21,24 @@
             $email = $_POST['email'];
             $senha = $_POST['senha'];
 
-            $usuario = verificarEmail($pdo, $email);
-
-            if($usuario){
-                if($senha === $usuario['usuario_senha']){
-                    $_SESSION['usuario_id'] = $usuario['usuario_id'];
-                    $_SESSION['logado'] = true;
-                    header("Location: index.php"); 
-                    exit();
-                } else {
-                    $erro = "Senha incorreta!";
-                }
+            
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $erro = "Por favor, insira um e-mail válido!";
             } else {
-                $erro = "Usuário não encontrado!";
+                $usuario = verificarEmail($pdo, $email);
+
+                if($usuario){
+                    if($senha === $usuario['usuario_senha']){
+                        $_SESSION['usuario_id'] = $usuario['usuario_id'];
+                        $_SESSION['logado'] = true;
+                        header("Location: index.php"); 
+                        exit();
+                    } else {
+                        $erro = "Senha incorreta!";
+                    }
+                } else {
+                    $erro = "Usuário não encontrado!";
+                }
             }
         }
         ?>

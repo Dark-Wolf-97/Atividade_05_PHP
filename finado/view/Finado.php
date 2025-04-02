@@ -14,17 +14,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $finadoService = new FinadoService();
     
     if (isset($_POST['criar'])) {
-        $result = $finadoService->criar($_POST['finado_nome'], $_POST['finado_certidao']);
-        $mensagem = $result === 'Sucesso' ? 'Finado criado com sucesso!' : 'Erro ao criar finado!';
+        if ($_POST['finado_certidao'] < 0) {
+            $mensagem = 'Número de certidão inválido!';
+        } elseif (preg_match('/[0-9]/', $_POST['finado_nome'])) {
+            $mensagem = 'O nome não pode conter números!';
+        } else {
+            $result = $finadoService->criar($_POST['finado_nome'], $_POST['finado_certidao']);
+            $mensagem = $result === 'Sucesso' ? 'Finado criado com sucesso!' : 'Erro ao criar finado!';
+        }
     }
     
     if (isset($_POST['editar'])) {
-        $result = $finadoService->atualizar(
-            $_POST['id'],
-            $_POST['finado_nome'],
-            $_POST['finado_certidao']
-        );
-        $mensagem = $result ? 'Finado atualizado com sucesso!' : 'Erro ao atualizar finado!';
+        if ($_POST['finado_certidao'] < 0) {
+            $mensagem = 'Número de certidão inválido!';
+        } elseif (preg_match('/[0-9]/', $_POST['finado_nome'])) {
+            $mensagem = 'O nome não pode conter números!';
+        } else {
+            $result = $finadoService->atualizar(
+                $_POST['id'],
+                $_POST['finado_nome'],
+                $_POST['finado_certidao']
+            );
+            $mensagem = $result ? 'Finado atualizado com sucesso!' : 'Erro ao atualizar finado!';
+        }
     }
 }
 
@@ -55,11 +67,12 @@ function exibirModalFinado($modo = 'criar', $dados = null) {
                         <div class="mb-3">
                             <label for="finado_nome_'.$modo.'" class="form-label">Nome</label>
                             <input type="text" class="form-control" id="finado_nome_'.$modo.'" name="finado_nome" 
-                                value="'.($dados ? $dados['nome'] : '').'" required>
+                                value="'.($dados ? $dados['nome'] : '').'" required 
+                                oninput="this.value = this.value.replace(/[0-9]/g, \'\')">
                         </div>
                         <div class="mb-3">
                             <label for="finado_certidao_'.$modo.'" class="form-label">Certidão</label>
-                            <input type="number" class="form-control" id="finado_certidao_'.$modo.'" name="finado_certidao" 
+                            <input type="number" min="1" class="form-control" id="finado_certidao_'.$modo.'" name="finado_certidao" 
                                 value="'.($dados ? $dados['certidao'] : '').'" required>
                         </div>
                         <button type="submit" class="btn btn-custom">Salvar</button>
@@ -79,11 +92,11 @@ function exibirModalFinado($modo = 'criar', $dados = null) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
         .btn-custom {
-            background-color: #6c757d;
+            background-color:rgb(81, 78, 82);
             color: white;
         }
         .header {
-            background-color: #f8f9fa;
+            background-color:rgb(203, 202, 204);
             padding: 20px;
             margin-bottom: 30px;
             text-align: center;
@@ -92,8 +105,15 @@ function exibirModalFinado($modo = 'criar', $dados = null) {
 </head>
 
 <body>
-    <div class="header">
-        <h1>Lista de Finados</h1>
+<div class="header ">
+        <div class="container">
+            <div style="text-align:start;">
+                <a href="../../index.php" class="btn btn-custom">
+                    <- Voltar
+                </a>
+            </div>
+            <h1>Lista de Finados</h1>
+        </div>        
     </div>
 
     <div class="container mt-4">

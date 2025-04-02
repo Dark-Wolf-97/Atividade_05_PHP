@@ -14,24 +14,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $urnaService = new UrnaService();
     
     if (isset($_POST['criar'])) {
-        $result = $urnaService->criar(
-            $_POST['urna_nome'],
-            $_POST['urna_tipo'],
-            $_POST['urna_material'],
-            $_POST['urna_preco']
-        );
-        $mensagem = $result === 'Sucesso' ? 'Urna criada com sucesso!' : 'Erro ao criar urna!';
+        if ($_POST['urna_preco'] < 0) {
+            $mensagem = 'O preço não pode ser negativo!';
+        } else {
+            $result = $urnaService->criar(
+                $_POST['urna_nome'],
+                $_POST['urna_tipo'],
+                $_POST['urna_material'],
+                $_POST['urna_preco']
+            );
+            $mensagem = $result === 'Sucesso' ? 'Urna criada com sucesso!' : 'Erro ao criar urna!';
+        }
     }
     
     if (isset($_POST['editar'])) {
-        $result = $urnaService->atualizar(
-            $_POST['id'],
-            $_POST['urna_nome'],
-            $_POST['urna_tipo'],
-            $_POST['urna_material'],
-            $_POST['urna_preco']
-        );
-        $mensagem = $result ? 'Urna atualizada com sucesso!' : 'Erro ao atualizar urna!';
+        if ($_POST['urna_preco'] < 0) {
+            $mensagem = 'O preço não pode ser negativo!';
+        } else {
+            $result = $urnaService->atualizar(
+                $_POST['id'],
+                $_POST['urna_nome'],
+                $_POST['urna_tipo'],
+                $_POST['urna_material'],
+                $_POST['urna_preco']
+            );
+            $mensagem = $result ? 'Urna atualizada com sucesso!' : 'Erro ao atualizar urna!';
+        }
     }
 }
 
@@ -67,14 +75,15 @@ function exibirModalUrna($modo = 'criar', $dados = null) {
                         <div class="mb-3">
                             <label for="urna_tipo_'.$modo.'" class="form-label">Tipo</label>
                             <select class="form-select" id="urna_tipo_'.$modo.'" name="urna_tipo" required>
-                                <option value="Adulto" '.($dados && $dados['tipo'] == 'Adulto' ? 'selected' : '').'>Adulto</option>
-                                <option value="Infantil" '.($dados && $dados['tipo'] == 'Infantil' ? 'selected' : '').'>Infantil</option>
+                                <option value="Caixão" '.($dados && $dados['tipo'] == 'Caixão' ? 'selected' : '').'>Caixão</option>
+                                <option value="Urna" '.($dados && $dados['tipo'] == 'Urna' ? 'selected' : '').'>Urna</option>
                             </select>
                         </div>
                         <div class="mb-3">
                             <label for="urna_material_'.$modo.'" class="form-label">Material</label>
                             <select class="form-select" id="urna_material_'.$modo.'" name="urna_material" required>
                                 <option value="Madeira" '.($dados && $dados['material'] == 'Madeira' ? 'selected' : '').'>Madeira</option>
+                                <option value="Metal" '.($dados && $dados['material'] == 'Metal' ? 'selected' : '').'>Metal</option>
                                 <option value="Mármore" '.($dados && $dados['material'] == 'Mármore' ? 'selected' : '').'>Mármore</option>
                                 <option value="Bronze" '.($dados && $dados['material'] == 'Bronze' ? 'selected' : '').'>Bronze</option>
                                 <option value="Aço" '.($dados && $dados['material'] == 'Aço' ? 'selected' : '').'>Aço</option>
@@ -82,7 +91,7 @@ function exibirModalUrna($modo = 'criar', $dados = null) {
                         </div>
                         <div class="mb-3">
                             <label for="urna_preco_'.$modo.'" class="form-label">Preço (R$)</label>
-                            <input type="number" step="0.01" class="form-control" id="urna_preco_'.$modo.'" name="urna_preco" 
+                            <input type="number" step="0.01" min="1" class="form-control" id="urna_preco_'.$modo.'" name="urna_preco" 
                                 value="'.($dados ? $dados['preco'] : '').'" required>
                         </div>
                         <button type="submit" class="btn btn-custom">Salvar</button>
@@ -102,21 +111,29 @@ function exibirModalUrna($modo = 'criar', $dados = null) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
         .btn-custom {
-            background-color: #6c757d;
+            background-color:rgb(81, 78, 82);
             color: white;
         }
         .header {
-            background-color: #f8f9fa;
+            background-color:rgb(203, 202, 204);
             padding: 20px;
             margin-bottom: 30px;
             text-align: center;
+
         }
     </style>
 </head>
 
 <body>
-    <div class="header">
-        <h1>Lista de Urnas</h1>
+<div class="header ">
+        <div class="container">
+            <div style="text-align:start;">
+                <a href="../../index.php" class="btn btn-custom">
+                    <- Voltar
+                </a>
+            </div>
+            <h1>Lista de Urnas</h1>
+        </div>        
     </div>
 
     <div class="container mt-4">
